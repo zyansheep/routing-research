@@ -12,6 +12,7 @@
 	- [Data](#data)
 		- [Analysis](#analysis)
 	- [Discussion](#discussion)
+	- [Citations](#citations)
 
 ## Problem Statement
 Conventional internet anonymization networks (i.e. [Tor](https://www.torproject.org/) and [I2P](https://geti2p.net/en/about/intro)) are slow to use making them unappealing for use in real-time applications. This is because data is routed through random nodes in the network from source to destination. Packets could be routed from Europe to Asia and around the world before reaching their destination. This random-routing protocol is necessary, however, for anonymizing a connection and keeping participants's real IPs private which is the main goal of these networks.
@@ -61,3 +62,9 @@ To reproduce, build the simulation program with the rust nightly compiler and ru
 ## Discussion
 
 ???
+
+## Citations
+https://medium.com/@maidsafe/structuring-network-with-xor-431e785b5ee7
+https://www.youtube.com/watch?v=w9UObz8o8lY
+https://www.torproject.org/
+https://geti2p.net/en/about/intro
