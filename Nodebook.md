@@ -9,6 +9,7 @@
 		- [Hypothesis](#hypothesis)
 		- [Variables](#variables)
 		- [Procedure](#procedure)
+			- [Node Message Sending](#node-message-sending)
 	- [Data](#data)
 		- [Analysis](#analysis)
 	- [Discussion](#discussion)
@@ -51,7 +52,46 @@ Routing speed and connection establishment can be made faster by a distance-base
 
 ### Procedure
 This experiment was run by creating a model of the internet that can route packets between *Nodes*. These *Nodes* keep track of their view of the network and pass packets around to replicate how real computers would implement this protocol.
-To reproduce, build the simulation program with the rust nightly compiler and run the tests
+To reproduce, build the simulation program with the rust nightly compiler and run the tests.
+
+#### Node Message Sending
+
+Connect Stage: - Establishes encrypted tunnel to another node
+`Handshake` - Out of a simulation, this would be the point where symmetric encryption is initiated from an exchange of public keys. This is followed by an `Acknowledgement` to establish an encrypted connection
+
+Test Stage: - Determines the viability of a connection to a node
+`Ping` - A few random bytes of data are sent to another node with the expectation that they are sent back in a `PingResponse`. This is vital for the process of determining how close or far away a node is.
+
+Locate Stage: - Request interaction with other nodes on the network
+`RequestPings(NumberOfPings)` - This requests another node to instruct a certain number of their peers to Ping this node. It is used to find close nodes on the network
+Ping requests will be sent to the closest nodes in hope to find even closer nodes. This will occur recursively until the closest nodes are found.
+`WantPing` - This will be sent by the other node to it's peers when this node is trying to find nodes to connect to.
+`AcceptPing` - Sent from other node's peers to this node establishing connection
+
+Establish Stage: - Notify closest nodes that they are close
+`PeerNotify` - This notifies another node that this node thinks of it as a closer node (a peer) and that they should also test the connection. It can also be used to signal that a node no longer thinks of another node as close.
+
+Coordinate Stage: - Calculate own Route coordinates based on closest node's coordinates adjusting for any discrepecies.
+
+Typical message exchange for new node (1) connecting to established node (2) and organizing itself onto the network:
+
+
+1 -> 2: `Handshake`
+2 -> 1: `Acknowledgement`
+1 -> 2: `Ping` x5
+2 -> 1: `PingResponse` x5
+1 -> 2: `RequestPings(5)`
+2 -> 3: `WantPing(1)`
+3 -> 1: `Handshake`
+1 -> 3: `Acknowledgement`
+3 -> 1: `AcceptPing`
+1 -> 3: `Ping` x5
+3 -> 1: `PingResponse` x5
+1 -> 3: `RequestPings(5)`
+Repeat until there are no closer nodes known
+1 -> 15,67,23,...: `PeerNotify`
+
+TODO: Once enough close peers are found, Routing Coordinates can be calculated 
 
 ## Data
 ######N/A
