@@ -10,8 +10,9 @@
 		- [Variables](#variables)
 		- [Procedure](#procedure)
 			- [Node Message Sending](#node-message-sending)
+			- [Distance Based Routing](#distance-based-routing)
 	- [Data](#data)
-		- [Analysis](#analysis)
+	- [Analysis](#analysis)
 	- [Discussion](#discussion)
 	- [Citations](#citations)
 
@@ -93,18 +94,35 @@ Repeat until there are no closer nodes known
 
 TODO: Once enough close peers are found, Routing Coordinates can be calculated 
 
+#### Distance Based Routing
+Once a Node calculates it's own Routing Coordinates, it publishes them to a Distributed Hash Table (DHT) which is a way to store key-value pairs across a network in a decentralized way.
+Once a node's Routing Coordinates are public, anyone that knows a node's public Node ID can figure out where they are relative to 
+
 ## Data
+Two sets of data: Ticks/Packet for Targeted Routing and Random Routing respectively 
 ######N/A
 
-### Analysis
-???
+## Analysis
+Hypothesis - The new distance-based routing method is faster than a random routing method
+
+2 Samples - Sample of old routing times, Sample of new routing times
+Need samples > 30 for approx normal distribution
+
+
+2-Sample T-Test
+Null Hypothesis: Mnew = Mold (try to disprove)
+H_a: Mnew < Mold (proved by rejecting null hypothesis)
+
+t = ((xbar_new - xbar_old) - 0 ) / stddev
+stdev = sqrt(s1^2/n1  +s2^2/n2)
 
 ## Discussion
 
-???
+Since the early days of the internet, the only way to browse with some semblance of anonymity
 
 ## Citations
-https://medium.com/@maidsafe/structuring-network-with-xor-431e785b5ee7
-https://www.youtube.com/watch?v=w9UObz8o8lY
-https://www.torproject.org/
-https://geti2p.net/en/about/intro
+MaidSafe. (2018, December 11). Structuring network with XOR. https://medium.com/@maidsafe/structuring-network-with-xor-431e785b5ee7. 
+safepodmtl. (2014). 1.2. Xor distance and basic routing. https://www.youtube.com/watch?v=w9UObz8o8lY. 
+Computerphile. (2017). Onion Routing - Computerphile. YouTube. https://www.youtube.com/watch?v=QRYzre4bf7I. 
+
+I2P Developers. (2021, February 17). Intro to I2P. I2P. https://geti2p.net/en/about/intro. 
