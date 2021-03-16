@@ -1,7 +1,7 @@
-# Fast, Anonymous, Distance-Based Routing
+# Distance-Based Routing
 
 ## Table of Contents
-- [Fast, Anonymous, Distance-Based Routing](#fast-anonymous-distance-based-routing)
+- [Distance-Based Routing](#distance-based-routing)
 	- [Table of Contents](#table-of-contents)
 	- [Problem Statement](#problem-statement)
 	- [Background Research](#background-research)
@@ -10,7 +10,7 @@
 		- [Variables](#variables)
 		- [Procedure](#procedure)
 			- [Node Message Sending](#node-message-sending)
-			- [Distance Based Routing](#distance-based-routing)
+			- [Distance Based Routing](#distance-based-routing-1)
 	- [Data](#data)
 	- [Analysis](#analysis)
 	- [Discussion](#discussion)
@@ -60,11 +60,10 @@ To reproduce, build the simulation program with the rust nightly compiler and ru
 Connect Stage: - Establishes encrypted tunnel to another node
 `Handshake` - Out of a simulation, this would be the point where symmetric encryption is initiated from an exchange of public keys. This is followed by an `Acknowledgement` to establish an encrypted connection
 
-Test Stage: - Determines the viability of a connection to a node
-`Ping` - A few random bytes of data are sent to another node with the expectation that they are sent back in a `PingResponse`. This is vital for the process of determining how close or far away a node is.
+Exchange Stage: - Nodes query other nodes for relevent information like Route Coordinates, number of remote peers and reciprocal latency.
 
 Locate Stage: - Request interaction with other nodes on the network
-`RequestPings(NumberOfPings)` - This requests another node to instruct a certain number of their peers to Ping this node. It is used to find close nodes on the network
+`RequestPings(number_of_pings)` - This requests another node to instruct a certain number of their peers to Ping this node. It is used to find close nodes on the network
 Ping requests will be sent to the closest nodes in hope to find even closer nodes. This will occur recursively until the closest nodes are found.
 `WantPing` - This will be sent by the other node to it's peers when this node is trying to find nodes to connect to.
 `AcceptPing` - Sent from other node's peers to this node establishing connection
@@ -74,13 +73,12 @@ Establish Stage: - Notify closest nodes that they are close
 
 Coordinate Stage: - Calculate own Route coordinates based on closest node's coordinates adjusting for any discrepecies.
 
-Typical message exchange for new node (1) connecting to established node (2) and organizing itself onto the network:
-
+Typical message exchange for new node (1) bootstrapping to established node (2) who is also connected to node (3) and organizing itself onto the network.
 
 1 -> 2: `Handshake`
 2 -> 1: `Acknowledgement`
-1 -> 2: `Ping` x5
-2 -> 1: `PingResponse` x5
+1 -> 2: `ExchangeInfo`
+2 -> 1: `ExchangeInfoResponse` x5
 1 -> 2: `RequestPings(5)`
 2 -> 3: `WantPing(1)`
 3 -> 1: `Handshake`
@@ -118,11 +116,13 @@ stdev = sqrt(s1^2/n1  +s2^2/n2)
 
 ## Discussion
 
-Since the early days of the internet, the only way to browse with some semblance of anonymity
+Since the early days of the internet, the main way to browse while hiding your own IP address is to use a proxy. This is what VPNs are essentially, routing your traffic to another computer on earth. However, while the desination server may not be able to correlate your request with a specific IP, the proxy can do that since all your traffic is running through it. 
+This is what the TOR project aims to solve. TOR (The Onion Router) creates a network of proxies with which packets are routed through in such a way where no proxy can know both the origin of the packet and the destiation. It accomplishes this with onion routing: encrypting packets in layers such that each intermediate proxy can decrypt the outermost layer and figure out where to forward the packet next. 
+This multi-staged routing approach is excellent at obscuring connections through the network of proxies. However, it has no way to determine which series of proxies packets should be sent through. For TOR, proxies are chosen at random from a database. This means that packets routed through TOR could travel around the globe and back before reaching their destination. This inefficent router selection process is what this paper aims to solve.
+By programming each proxy in the network so that it locates other nearby proxies, DBR (Distance-based routing) can resolve the problem with TOR of randomly locating proxies.
 
 ## Citations
 MaidSafe. (2018, December 11). Structuring network with XOR. https://medium.com/@maidsafe/structuring-network-with-xor-431e785b5ee7. 
 safepodmtl. (2014). 1.2. Xor distance and basic routing. https://www.youtube.com/watch?v=w9UObz8o8lY. 
 Computerphile. (2017). Onion Routing - Computerphile. YouTube. https://www.youtube.com/watch?v=QRYzre4bf7I. 
-
 I2P Developers. (2021, February 17). Intro to I2P. I2P. https://geti2p.net/en/about/intro. 
