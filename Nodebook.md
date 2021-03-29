@@ -98,7 +98,7 @@ Once a node's Routing Coordinates are public, anyone that knows a node's public 
 
 ## Data
 Two sets of data: Ticks/Packet for Targeted Routing and Random Routing respectively 
-######N/A
+![data-graph](data/data-graphs.png "Generated Graphs from 97 Datapoints")
 
 ## Analysis
 Hypothesis - The new distance-based routing method is faster than a random routing method
@@ -106,13 +106,26 @@ Hypothesis - The new distance-based routing method is faster than a random routi
 2 Samples - Sample of old routing times, Sample of new routing times
 Need samples > 30 for approx normal distribution
 
+2-Sample T-Test:
 
-2-Sample T-Test
 Null Hypothesis: Mnew = Mold (try to disprove)
+
 H_a: Mnew < Mold (proved by rejecting null hypothesis)
 
 t = ((xbar_new - xbar_old) - 0 ) / stddev
 stdev = sqrt(s1^2/n1  +s2^2/n2)
+
+![formula](https://render.githubusercontent.com/render/math?math=t=\dfrac{(\bar%20x_{dist}-\bar%20x_{rand})-0}{\sqrt{\dfrac{s1^{2}}{n1}+\dfrac{s2^{2}}{n2}}})
+
+
+Calculations:
+
+![formula](https://render.githubusercontent.com/render/math?math=t=-15.88)
+
+![formula](https://render.githubusercontent.com/render/math?math=p=TCDF(t<-15.88)=0)
+
+p-value is so low I literally cannot calculate the precision
+I can say with 99.99999% certainty that the null hypothesis is false
 
 ## Discussion
 
@@ -125,4 +138,4 @@ By programming each proxy in the network so that it locates other nearby proxies
 MaidSafe. (2018, December 11). Structuring network with XOR. https://medium.com/@maidsafe/structuring-network-with-xor-431e785b5ee7. 
 safepodmtl. (2014). 1.2. Xor distance and basic routing. https://www.youtube.com/watch?v=w9UObz8o8lY. 
 Computerphile. (2017). Onion Routing - Computerphile. YouTube. https://www.youtube.com/watch?v=QRYzre4bf7I. 
-I2P Developers. (2021, February 17). Intro to I2P. I2P. https://geti2p.net/en/about/intro. 
+I2P Developers. (2021, February 17). Intro to I2P. I2P. https://geti2p.net/en/about/intro.
